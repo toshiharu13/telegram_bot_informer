@@ -29,7 +29,7 @@ def get_homework_statuses(current_timestamp):
         'Authorization': f'OAuth {PRAKTIKUM_TOKEN}',
     }
     if current_timestamp is None:
-        current_timestamp=int(time.time())
+        current_timestamp = int(time.time())
     params = {
         'from_date': current_timestamp,
     }
@@ -48,6 +48,9 @@ def main():
     # проинициализировать бота здесь
     bot_client = telegram.Bot(token=TELEGRAM_TOKEN)
     current_timestamp = int(time.time())  # начальное значение timestamp
+    # test_date = "20 November, 2020"
+    # test_date_format = time.strptime(test_date, "%d %B, %Y")
+    # current_timestamp = int(time.mktime(test_date_format))
 
     while True:
         try:

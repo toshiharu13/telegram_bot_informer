@@ -71,7 +71,7 @@ def main():
             current_timestamp = new_homework.get(
                 'current_date', current_timestamp
             )
-            time.sleep(300)  # опрашивать раз в пять минут
+            time.sleep(1200)  # опрашивать раз в 20 минут
 
         except Exception as e:
             logging.error(f'Бот столкнулся с ошибкой: {e}')

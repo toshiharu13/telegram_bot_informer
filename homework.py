@@ -1,13 +1,18 @@
+import logging
 import os
 import time
 
 import requests
 import telegram
-import logging
 from dotenv import load_dotenv
 
 load_dotenv()
 
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s; %(levelname)s; %(name)s; %(message)s',
+                   )
 
 PRAKTIKUM_TOKEN = os.getenv("PRAKTIKUM_TOKEN")
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
@@ -45,9 +50,10 @@ def send_message(message, bot_client):
 
 
 def main():
-    # проинициализировать бота здесь
+    logging.debug('Бот запущен')
     bot_client = telegram.Bot(token=TELEGRAM_TOKEN)
-    current_timestamp = int(time.time())  # начальное значение timestamp
+    current_timestamp = int(time.time())
+    # Блок теста бота, дата - месяц назад
     # test_date = "20 November, 2020"
     # test_date_format = time.strptime(test_date, "%d %B, %Y")
     # current_timestamp = int(time.mktime(test_date_format))
@@ -56,12 +62,20 @@ def main():
         try:
             new_homework = get_homework_statuses(current_timestamp)
             if new_homework.get('homeworks'):
-                send_message(parse_homework_status(new_homework.get('homeworks')[0]), bot_client)
-            current_timestamp = new_homework.get('current_date', current_timestamp)  # обновить timestamp
+                send_message(
+                    parse_homework_status(
+                        new_homework.get('homeworks')[0]), bot_client
+                )
+                logging.info('Сообщение отправлено')
+            # обновить timestamp
+            current_timestamp = new_homework.get(
+                'current_date', current_timestamp
+            )
             time.sleep(300)  # опрашивать раз в пять минут
 
         except Exception as e:
-            print(f'Бот столкнулся с ошибкой: {e}')
+            logging.error(f'Бот столкнулся с ошибкой: {e}')
+            send_message(e, bot_client)
             time.sleep(5)
 
 

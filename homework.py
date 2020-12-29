@@ -17,6 +17,7 @@ logging.basicConfig(
 PRAKTIKUM_TOKEN = os.getenv("PRAKTIKUM_TOKEN")
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
+url = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
 
 
 def parse_homework_status(homework):
@@ -29,7 +30,6 @@ def parse_homework_status(homework):
 
 
 def get_homework_statuses(current_timestamp):
-    url = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
     headers = {
         'Authorization': f'OAuth {PRAKTIKUM_TOKEN}',
     }
@@ -53,18 +53,14 @@ def main():
     logging.debug('Бот запущен')
     bot_client = telegram.Bot(token=TELEGRAM_TOKEN)
     current_timestamp = int(time.time())
-    # Блок теста бота, дата - месяц назад
-    # test_date = "20 November, 2020"
-    # test_date_format = time.strptime(test_date, "%d %B, %Y")
-    # current_timestamp = int(time.mktime(test_date_format))
-
     while True:
         try:
             new_homework = get_homework_statuses(current_timestamp)
-            if new_homework.get('homeworks'):
+            new_homework_request = new_homework.get('homeworks')
+            if new_homework_request:
                 send_message(
                     parse_homework_status(
-                        new_homework.get('homeworks')[0]), bot_client
+                        new_homework_request[0]), bot_client
                 )
                 logging.info('Сообщение отправлено')
             # обновить timestamp

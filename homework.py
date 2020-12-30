@@ -22,6 +22,8 @@ url = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
 
 def parse_homework_status(homework):
     homework_name = homework.get('homework_name')
+    if homework_name is None:
+        return logging.error(f'отсутствует неазвание работы {homework_name}')
     hw_gt_status = homework.get('status')
     if hw_gt_status == 'rejected':
         verdict = 'К сожалению в работе нашлись ошибки.'
